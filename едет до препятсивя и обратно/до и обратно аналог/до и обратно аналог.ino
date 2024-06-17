@@ -1,0 +1,105 @@
+#include <NewPing.h>
+
+#define TRIG_PIN 12// Пин для отправки ультразвукового сигнала
+#define ECHO_PIN 11// Пин для приема ультразвукового сигнала
+#define MAX_DISTANCE 200// Максимальное расстояние для определения препятствия
+
+NewPing sonar(TRIG_PIN, ECHO_PIN, MAX_DISTANCE);// Объект для работы с ультразвуковым датчиком
+
+#define MOTOR1_PWM 6
+#define MOTOR1_IN1 5
+#define MOTOR1_IN2 4
+#define MOTOR2_PWM 10
+#define MOTOR2_IN1 9
+#define MOTOR2_IN2 8
+#define MOTOR3_PWM 3
+#define MOTOR3_IN1 2
+#define MOTOR3_IN2 7
+#define MOTOR4_PWM 13
+#define MOTOR4_IN1 A5
+#define MOTOR4_IN2 A4
+
+void setup() {
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+
+  pinMode(MOTOR1_PWM, OUTPUT);
+  pinMode(MOTOR1_IN1, OUTPUT);
+  pinMode(MOTOR1_IN2, OUTPUT);
+
+  pinMode(MOTOR2_PWM, OUTPUT);
+  pinMode(MOTOR2_IN1, OUTPUT);
+  pinMode(MOTOR2_IN2, OUTPUT);
+  
+  pinMode(MOTOR3_PWM, OUTPUT);
+  pinMode(MOTOR3_IN1, OUTPUT);
+  pinMode(MOTOR3_IN2, OUTPUT);
+
+  pinMode(MOTOR4_PWM, OUTPUT);
+  pinMode(MOTOR4_IN1, OUTPUT);
+  pinMode(MOTOR4_IN2, OUTPUT);
+  
+  // Установленный двигатель изначально остановлен
+  analogWrite(MOTOR1_PWM, 0);
+  analogWrite(MOTOR2_PWM, 0);
+  analogWrite(MOTOR3_PWM, 0);
+  analogWrite(MOTOR4_PWM, 0);
+}
+
+void loop() {
+  int distance = sonar.ping_cm();// Получаем расстояние до препятствия в сантиметрах
+  
+  if(distance > 0 && distance <= 20) {// Если препятствие на расстоянии до 20 см
+    stopMotors();
+    delay(1000);// Пауза перед поворотом
+    reverse();
+    delay(1000);// Время движения назад
+    stopMotors();
+    delay(1000); // Пауза перед поворотом
+  } else {
+    drive();
+  }
+}
+
+void drive() {
+  analogWrite(MOTOR1_PWM, 255);
+  analogWrite(MOTOR1_IN1, HIGH);
+  analogWrite(MOTOR1_IN2, LOW);
+
+  analogWrite(MOTOR2_PWM, 255);
+  analogWrite(MOTOR2_IN1, HIGH);
+  analogWrite(MOTOR2_IN2, LOW);
+  
+  analogWrite(MOTOR3_PWM, 255);
+  analogWrite(MOTOR3_IN1, HIGH);
+  analogWrite(MOTOR3_IN2, LOW);
+
+  analogWrite(MOTOR4_PWM, 255);
+  analogWrite(MOTOR4_IN1, HIGH);
+  analogWrite(MOTOR4_IN2, LOW);
+}
+
+void stopMotors() {
+  analogWrite(MOTOR1_PWM, 0);
+  analogWrite(MOTOR2_PWM, 0);
+  analogWrite(MOTOR3_PWM, 0);
+  analogWrite(MOTOR4_PWM, 0);
+}
+
+void reverse() {
+  analogWrite(MOTOR1_PWM, 255);
+  analogWrite(MOTOR1_IN1, LOW);
+  analogWrite(MOTOR1_IN2, HIGH);
+
+  analogWrite(MOTOR2_PWM, 255);
+  analogWrite(MOTOR2_IN1, LOW);
+  analogWrite(MOTOR2_IN2, HIGH);
+  
+  analogWrite(MOTOR3_PWM, 255);
+  analogWrite(MOTOR3_IN1, LOW);
+  analogWrite(MOTOR3_IN2, HIGH);
+
+  analogWrite(MOTOR4_PWM, 255);
+  analogWrite(MOTOR4_IN1, LOW);
+  analogWrite(MOTOR4_IN2, HIGH);
+}
