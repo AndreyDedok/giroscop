@@ -1,0 +1,36 @@
+#define ENA 3 // Пин для управления мотором 1
+#define IN1 4 // Пин для управления мотором 1
+#define IN2 5 // Пин для управления мотором 1
+#define ENB 6 // Пин для управления мотором 2
+#define IN3 7 // Пин для управления мотором 2
+#define IN4 8 // Пин для управления мотором 2
+
+int distance = 100; // Заданное расстояние для движения (в сантиметрах)
+
+void setup() {
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(ENB, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+}
+
+void loop() {
+  // Движение вперед
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+  analogWrite(ENA, 255);
+  analogWrite(ENB, 255);
+
+  // Ожидание для проезда заданного расстояния
+  delay(distance * 10); // Предполагаем, что робот движется со скоростью 10 сантиметров в секунду
+
+  // Остановка
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+}
