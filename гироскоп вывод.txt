@@ -1,0 +1,39 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <MPU6050_tockn.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2); // Адрес экрана и его параметры
+MPU6050 mpu6050(Wire);
+
+void setup() {
+Wire.begin();
+Serial.begin(9600);
+lcd.init(); // Инициализация экрана
+lcd.backlight();
+
+if (!mpu6050.begin()) {
+lcd.print("Ошибка гироскопа");
+while (1);
+}
+}
+
+void loop() {
+mpu6050.update();
+float angle = mpu6050.getAngleX(); // Получение угла поворота
+float angularVelocity = mpu6050.getGyroX(); // Получение угловой скорости
+
+Serial.print("Угол: ");
+Serial.print(angle);
+Serial.print(" | ");
+Serial.print("Угловая скорость: ");
+Serial.println(angularVelocity);
+
+lcd.setCursor(0, 0);
+lcd.print("Угол: ");
+lcd.print(angle);
+lcd.setCursor(0, 1);
+lcd.print("Угловая скорость: ");
+lcd.print(angularVelocity);
+
+delay(100); // Задержка для обновления данных
+}
