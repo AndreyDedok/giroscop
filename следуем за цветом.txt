@@ -1,0 +1,43 @@
+#include <Wire.h>
+#include <ESP32_Cam.h>
+
+#define TRIGGER_PIN 9
+#define ECHO_PIN 10
+#define TARGET_COLOR 0xF028FF // Цвет объекта, за которым следим (X)
+
+int distance;
+
+void setup() {
+  pinMode(TRIGGER_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  
+  // Инициализация ESP32 камеры
+  Camera.begin();
+}
+
+void loop() {
+  // Получаем расстояние до объекта
+  distance = measureDistance();
+  
+  // Захватываем изображение с камеры ESP32
+  Camera.run();
+  uint16_t x = Camera.readObjectXColor(TARGET_COLOR);
+  
+  // Если объект X найден и расстояние до объекта меньше заданного значения, двигаемся вперед
+  if (x > 0 && distance < 30) {
+    // Движение вперед
+  }
+}
+
+int measureDistance() {
+  digitalWrite(TRIGGER_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIGGER_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIGGER_PIN, LOW);
+
+  long duration = pulseIn(ECHO_PIN, HIGH);
+  int distance = duration * 0.034 / 2;
+
+  return distance;
+}
